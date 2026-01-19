@@ -1,0 +1,62 @@
+.filtr{
+    margin: 5px;
+    font-size: 25px;
+}
+
+label{
+    margin-left: 15px;
+}
+label input {
+    margin: 5px;
+}
+
+.btn {
+    /*width: 100px;*/
+    /*height: 50px;*/
+    border: 2px solid black;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.dlt{
+    background-color: red;
+    color: black;
+
+}
+
+.err {
+    color: red;
+    font-size: 20px;
+}
+
+.clr {
+    background-color: red;
+}
+
+.addAll {
+    background-color: green;
+}
+
+.tb {
+    margin-top: 10px;
+}
+
+* {
+    user-select: none;
+}
+
+
+th:hover {
+    background-color: lightblue;
+    cursor: pointer;
+}
+
+
+
+
+.footer{
+    background-color: red !important;
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: html(content=~{::main})}"
+>
+<main th:fragment="main">
+    <h1>Edit person</h1>
+    <!--<div th:if="${messages!=null}">-->
+    <!--    <h3 th:text="${messages}"></h3>-->
+    <!--</div>-->
+    <form method="post" th:action="@{/home/id(id=${person.getId()})}" th:object="${person}">
+
+        <div th:if="${#fields.hasErrors()}">
+            <ol>
+                <li class="err" th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ol>
+        </div>
+
+
+        Name : <input type="text" th:field="*{name}">
+        <span style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        <br>
+        Surname : <input type="text" th:field="*{surname}">
+        <span style="color: red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
+        <br>
+        Email : <input type="text" th:field="*{email}">
+        <span style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        <br>
+        Age : <input type="number" th:field="*{age}">
+        <span style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
+        <br>
+
+        <button type="submit">Save</button>
+        <a th:href="@{/home/people}">Cancel</a>
+    </form>
+
+</main>

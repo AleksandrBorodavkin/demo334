@@ -1,0 +1,31 @@
+{
+	"image": "mcr.microsoft.com/devcontainers/java:dev-25-trixie",
+	
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": false
+		},
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "20"
+		}
+	},
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"vscjava.vscode-spring-boot-dashboard"
+			]
+		}
+	},
+
+	"forwardPorts": [8080],
+	"portsAttributes": {
+		"8080": {
+			"label": "Spring Boot",
+			"onAutoForward": "notify"
+		}
+	}
+}

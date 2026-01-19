@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageName}"></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+
+<a class="btn clr" th:href="@{/home/clear}">Clear</a>
+<a class="btn addAll" th:href="@{/home/addAll}">Add All</a>
+<a class="btn add" th:href="@{/home/add}">Add</a>
+
+<div id="peopleTable" class="tb" th:if="${people!=null and !people.isEmpty()}">
+    <table border="1">
+       <thead>
+            <tr>
+                <th onclick="sortTable(0)">Id</th>
+                <th onclick="sortTable(1)">Name</th>
+                <th onclick="sortTable(2)">Surname</th>
+                <th onclick="sortTable(3)">Surname</th>
+                <th onclick="sortTable(4)">Email</th>
+                <th >Buttons</th>
+            </tr>
+       </thead>
+       <tbody>
+            <tr th:each="person : ${people}" th:attr="data-id=${person.getId()}">
+                <td th:text="${person.getId()}"></td>
+                <td th:text="${person.getName()}"></td>
+                <td th:text="${person.getSurname()}"></td>
+                <td th:text="${person.getEmail()}"></td>
+                <td th:text="${person.getAge()}"></td>
+                <td>
+                    <a class="dlt btn" th:onclick="'deleteByRow('+${person.getId()}+')'">Delete</a>
+                    <a class="dlt btn" th:href="@{/home/edit/{id}(id=${person.getId()})}">Edit</a>
+<!--                    <a class="dlt btn" th:href="@{/home/delete/{id}(id=${person.getId()})}">Delete</a>-->
+<!--                    <form onsubmit="return confirm('Vi uvereni cto xotite udalit?')" th:action="@{/home/delete/{id}(id=${person.getId()})}" method="post">-->
+<!--                        <input type="hidden" name="_method" value="delete">-->
+<!--                        <button class="dlt btn"  type="submit">Delete</button>-->
+<!--                    </form>-->
+<!--                    <a class="dlt btn" th:href="@{/home/delete/{id}(id=${person.getId()})}">Delete</a>-->
+
+
+                </td>
+            </tr>
+       </tbody>
+    </table>
+</div>
+
+
+<div th:if="${people==null or people.isEmpty()}">
+    <p>No data</p>
+</div>
+
+</body>
+</html>
