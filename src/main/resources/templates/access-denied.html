@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Доступ запрещен</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 { color: #f44336; }
+        .error {
+            background: #ffebee;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        a {
+            color: #2196F3;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            border-radius: 4px;
+        }
+        a:hover {
+            background: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚫 Доступ запрещен</h1>
+        <div class="error">
+            <p><strong>403 Forbidden</strong></p>
+            <p>У вас нет прав для доступа к этому ресурсу.</p>
+            <p>Обратитесь к администратору для получения необходимых прав.</p>
+        </div>
+        <a href="/">Вернуться на главную</a>
+    </div>
+</body>
+</html>

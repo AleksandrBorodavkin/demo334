@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ панель</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #f44336; }
+        .info {
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .warning {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            border-left: 4px solid #ff9800;
+        }
+        a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Админ панель</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Внимание!</strong> Эта страница доступна только администраторам.
+        </div>
+        
+        <div class="info">
+            <p><strong>Администратор:</strong> <span th:text="${username}"></span></p>
+            <p th:text="${message}"></p>
+        </div>
+        
+        <div class="info">
+            <h3>Доступные функции:</h3>
+            <ul>
+                <li><a href="/admin/users">Управление пользователями</a></li>
+                <li><a href="/admin/settings">Настройки системы</a></li>
+                <li><a href="/api/admin/stats">Статистика (API)</a></li>
+            </ul>
+        </div>
+        
+        <p><a href="/">Вернуться на главную</a></p>
+    </div>
+</body>
+</html>
