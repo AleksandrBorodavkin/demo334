@@ -15,9 +15,10 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"ms-azuretools.vscode-docker",
-				"vscjava.vscode-spring-boot-dashboard"
-			]
+        "vscjava.vscode-java-pack",                 // Extension Pack for Java[web:31][web:30]
+        "vmware.vscode-boot-dev-pack",              // Spring Boot Extension Pack[web:29][web:30]
+        "vscjava.vscode-spring-boot-dashboard"      // Spring Boot Dashboard[web:22][web:33]
+      ]
 		}
 	},
 
