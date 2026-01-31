@@ -18,8 +18,19 @@
 ### Q: В чём разница между Authentication и Authorization?
 
 **A:**
-- **Authentication (аутентификация)** — ответ на вопрос «Кто вы?»: проверка личности (логин/пароль).
-- **Authorization (авторизация)** — ответ на вопрос «Что вы можете делать?»: проверка прав доступа к ресурсам.
+- **Authentication (аутентификация)** — «Кто вы?»: проверка личности (логин/пароль).
+- **Authorization (авторизация)** — «Что вы можете делать?»: проверка прав доступа к ресурсам.
+
+Сначала выполняется аутентификация, затем авторизация.
+
+```mermaid
+flowchart LR
+    A[Запрос] --> B{Аутентификация}
+    B -->|логин/пароль| C[Кто вы?]
+    C --> D{Авторизация}
+    D -->|роли/права| E[Что можно?]
+    E --> F[Доступ к ресурсу]
+```
 
 ---
 
@@ -43,7 +54,7 @@
 UserDetails loadUserByUsername(String username)
 ```
 
-Spring Security вызывает его при аутентификации, чтобы получить данные пользователя по имени.
+Spring Security вызывает его при аутентификации, чтобы получить объект `UserDetails` (логин, пароль, роли) по имени пользователя.
 
 ---
 
@@ -119,7 +130,7 @@ public String adminMethod() { ... }
 **A:**
 1. Создать роль в БД через `RoleRepository`.
 2. Назначить роль пользователю через `UserRepository`.
-3. Обновить правила в `SecurityConfig` или использовать `@PreAuthorize` на методах.
+3. Обновить правила в `SecurityConfig` (например, `requestMatchers`) или использовать `@PreAuthorize` на методах.
 
 ---
 
@@ -254,6 +265,32 @@ private long jwtExpirationMs;
 
 ---
 
+### Q: Какие библиотеки Spring используются для JWT?
+
+**A:** В проекте используются официальные модули Spring Security:
+- **spring-security-oauth2-jose** — работа с JWT (JOSE).
+- **spring-security-oauth2-resource-server** — OAuth2 Resource Server.
+- **NimbusJwtEncoder** и **NimbusJwtDecoder** — реализация на базе Nimbus JOSE + JWT SDK.
+
+---
+
+### Q: Как получить и использовать JWT в проекте?
+
+**A:**
+
+```bash
+# 1. Получить токен
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+
+# 2. Использовать токен в запросах
+curl http://localhost:8080/api/user/info \
+  -H "Authorization: Bearer <полученный_токен>"
+```
+
+---
+
 ## Модель данных
 
 ### Q: Как устроена связь User–Role (Many-to-Many)?
@@ -264,6 +301,104 @@ private long jwtExpirationMs;
 - Таблица `user_roles` — связь многие-ко-многим.
 
 Один пользователь может иметь несколько ролей, одна роль — у многих пользователей.
+
+```mermaid
+erDiagram
+    users ||--o{ user_roles : "имеет"
+    roles ||--o{ user_roles : "назначена"
+    users {
+        long id PK
+        string username
+        string password
+        boolean enabled
+    }
+    roles {
+        long id PK
+        string name
+    }
+    user_roles {
+        long user_id FK
+        long role_id FK
+    }
+```
+
+---
+
+## Диаграммы (Mermaid)
+
+### Цепочка фильтров (SecurityFilterChain)
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant JwtFilter
+    participant FormLoginFilter
+    participant Controller
+
+    Client->>JwtFilter: HTTP Request
+    JwtFilter->>JwtFilter: Есть Bearer токен?
+    alt Токен есть и валиден
+        JwtFilter->>JwtFilter: Установить Authentication
+    end
+    JwtFilter->>FormLoginFilter: doFilter
+    FormLoginFilter->>Controller: Запрос
+    Controller-->>Client: Ответ
+```
+
+### Аутентификация через UserDetailsService
+
+```mermaid
+flowchart TD
+    A[Логин + пароль] --> B[AuthenticationManager]
+    B --> C[UserDetailsService]
+    C --> D[loadUserByUsername]
+    D --> E[(БД users)]
+    E --> F[UserDetails]
+    F --> G[PasswordEncoder.matches]
+    G --> H{Пароль верный?}
+    H -->|Да| I[Authentication в SecurityContext]
+    H -->|Нет| J[BadCredentialsException]
+```
+
+### JWT: получение и использование токена
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant POST_login
+    participant AuthManager
+    participant JwtEncoder
+    participant API
+    participant JwtFilter
+
+    Client->>POST_login: POST /api/auth/login
+    POST_login->>AuthManager: authenticate
+    AuthManager-->>POST_login: Authentication
+    POST_login->>JwtEncoder: encode
+    JwtEncoder-->>Client: JWT токен
+
+    Client->>API: GET /api/user/info + Bearer token
+    API->>JwtFilter: Request
+    JwtFilter->>JwtFilter: извлечь токен, проверить
+    JwtFilter->>JwtFilter: SecurityContext.setAuthentication
+    JwtFilter->>API: doFilter
+    API-->>Client: JSON ответ
+```
+
+### Два способа аутентификации в проекте
+
+```mermaid
+flowchart LR
+    subgraph Веб
+        A[Форма /login] --> B[Сессия + cookie]
+        B --> C[/user/**, /admin/**]
+    end
+    subgraph REST API
+        D[POST /api/auth/login] --> E[JWT токен]
+        E --> F[Authorization: Bearer]
+        F --> G[/api/user/**, /api/admin/**]
+    end
+```
 
 ---
 
