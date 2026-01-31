@@ -118,8 +118,9 @@ public class SecurityConfig {
                         .accessDeniedPage("/access-denied") // Страница при отказе в доступе
                 );
 
-        // Для H2 Console (только для разработки)
-        http.headers(headers -> headers.frameOptions().sameOrigin());
+        // Для H2 Console (только для разработки) — frameOptions через Customizer (6.1+)
+        http.headers(headers -> headers
+                .frameOptions(frameOptions -> frameOptions.sameOrigin()));
 
         return http.build();
     }
@@ -132,10 +133,10 @@ public class SecurityConfig {
      * - Password encoding при проверке пароля
      */
     @Bean
+    @SuppressWarnings("deprecation") // setUserDetailsService deprecated в 6.x, конструктора с UserDetailsService в API нет
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(passwordEncoder());
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
