@@ -391,12 +391,12 @@ sequenceDiagram
 flowchart LR
     subgraph Веб
         A[Форма /login] --> B[Сессия + cookie]
-        B --> C[/user/**, /admin/**]
+        B --> C["/user/** , /admin/**"]
     end
     subgraph REST API
         D[POST /api/auth/login] --> E[JWT токен]
         E --> F[Authorization: Bearer]
-        F --> G[/api/user/**, /api/admin/**]
+        F --> G["/api/user/** , /api/admin/**"]
     end
 ```
 
